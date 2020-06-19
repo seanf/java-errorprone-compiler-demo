@@ -85,7 +85,9 @@
     <profile>
       <id>simple-logging</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>!logback</name>
+        </property>
       </activation>
       <dependencies>
         <dependency>
@@ -96,7 +98,12 @@
       </dependencies>
     </profile>
     <profile>
-      <id>verbose-logging</id>
+      <id>logback-logging</id>
+      <activation>
+        <property>
+          <name>logback</name>
+        </property>
+      </activation>
       <dependencyManagement>
         <dependencies>
           <dependency>
