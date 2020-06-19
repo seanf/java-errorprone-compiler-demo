@@ -5,12 +5,12 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.zrgs.errorprone</groupId>
-  <artifactId>errorprone-demo</artifactId>
+  <groupId>org.flanigan</groupId>
+  <artifactId>nullaway-demo</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
 
-  <name>Java errorprone compiler demo</name>
+  <name>Java errorprone+nullaway compiler demo</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -23,7 +23,8 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.verbose>false</maven.compiler.verbose>
     <openclover.version>4.4.1</openclover.version>
-    <plexus.compiler.version>2.8.5</plexus.compiler.version>
+    <plexus.compiler.version>2.8.6</plexus.compiler.version>
+    <nullaway.version>0.7.10</nullaway.version>
     <plexus.utils.version>3.3.0</plexus.utils.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -45,37 +46,39 @@
             <configuration>
               <compilerId>javac-with-errorprone</compilerId>
               <forceJavacCompilerUse>true</forceJavacCompilerUse>
+              <fork>true</fork>
+              <failOnWarning>true</failOnWarning>
+              <showDeprecation>true</showDeprecation>
+              <showWarnings>true</showWarnings>
+              <useIncrementalCompilation>false</useIncrementalCompilation>
+              <annotationProcessorPaths>
+                <dependency>
+                  <groupId>com.uber.nullaway</groupId>
+                  <artifactId>nullaway</artifactId>
+                  <version>${nullaway.version}</version>
+                </dependency>
+              </annotationProcessorPaths>
+              <compilerArgs>
+                <arg>-Xep:NullAway:ERROR</arg>
+                <arg>-XepOpt:NullAway:AnnotatedPackages=org</arg>
+              </compilerArgs>
             </configuration>
             <dependencies>
-              <dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-utils</artifactId>
-                <version>${plexus.utils.version}</version>
-              </dependency>
+              <!-- Use a newer version of errorprone. 2.4 won't work yet: https://github.com/codehaus-plexus/plexus-compiler/issues/77 -->
               <dependency>
                 <groupId>com.google.errorprone</groupId>
                 <artifactId>error_prone_core</artifactId>
                 <version>${errorprone.compiler.version}</version>
               </dependency>
+<!--              <dependency>-->
+<!--                <groupId>com.uber.nullaway</groupId>-->
+<!--                <artifactId>nullaway</artifactId>-->
+<!--                <version>${nullaway.version}</version>-->
+<!--              </dependency>-->
               <dependency>
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-compiler-javac-errorprone</artifactId>
                 <version>${plexus.compiler.version}</version>
-              </dependency>
-              <dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-compiler-api</artifactId>
-                <version>${plexus.compiler.version}</version>
-              </dependency>
-              <dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-compiler-manager</artifactId>
-                <version>${plexus.compiler.version}</version>
-              </dependency>
-              <dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-utils</artifactId>
-                <version>${plexus.utils.version}</version>
               </dependency>
             </dependencies>
           </plugin>
@@ -237,6 +240,12 @@
   </dependencyManagement>
 
   <dependencies>
+
+<!--    <dependency>-->
+<!--      <groupId>com.uber.nullaway</groupId>-->
+<!--      <artifactId>nullaway</artifactId>-->
+<!--      <version>${nullaway.version}</version>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>systems.manifold</groupId>
